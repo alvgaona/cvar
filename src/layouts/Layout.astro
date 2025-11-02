@@ -1,0 +1,80 @@
+---
+import "@/styles/globals.css";
+import siteMeta from "@/site-meta";
+import '@fontsource-variable/mona-sans/wdth.css';
+
+import { ThemeToggle } from "@/components/ThemeToggle"
+import Footer from "@/components/Footer.astro";
+import { Nav } from "@/components/Nav";
+
+const { meta } = Astro.props;
+
+const siteTitle = `${meta.title} • ${siteMeta.title}`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const socialImageUrl = new URL(meta?.ogImage ? meta.ogImage : "/social-card.png", Astro.url).href;
+---
+
+<!doctype html>
+<html lang={siteMeta.lang}>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="description" content={meta.description} />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content={meta?.articleDate ? "article" : "website"} />
+        <meta property="og:title" content={meta.title} />
+        <meta property="og:description" content={meta.description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content={siteMeta.title} />
+        <meta property="og:locale" content={siteMeta.ogLocale} />
+        <meta property="og:description" content={meta.description} />
+        <meta property="og:image" content={socialImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        {
+            meta?.articleDate && (
+                <>
+                    <meta property="article:author" content={siteMeta.author} />
+                    <meta property="article:published_time" content={meta.articleDate} />
+                </>
+            )
+        }
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={canonicalUrl} />
+        <meta property="twitter:title" content={meta.title} />
+        <meta property="twitter:description" content={meta.description} />
+        <meta property="twitter:image" content={socialImageUrl} />
+
+        <title>{siteTitle}</title>
+
+        <!-- RSS auto-discovery -->
+        <link rel="alternate" type="application/rss+xml" title={siteMeta.title} href="/rss.xml" />
+
+        <script is:inline src="/toggle-theme.js"></script>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <!-- <SpeedInsights /> -->
+    </head>
+    <body>
+        <!-- Navigation menu -->
+        <nav class="flex items-center gap-4 z-50 sticky top-2 bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-md p-4 rounded-lg mx-4 mb-12">
+            <a href="/">
+                <img src="/cvar-black.svg" alt="CVAR Logo" width="80" class="dark:hidden"/>
+                <img src="/cvar-white.svg" alt="CVAR Logo" width="80" class="hidden dark:block"/>
+            </a>
+            <Nav client:idle/>
+            <div class="ml-auto self-end">
+                <ThemeToggle client:idle/>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <slot/>
+
+        <!-- Footer -->
+        <Footer />
+    </body>
+</html>

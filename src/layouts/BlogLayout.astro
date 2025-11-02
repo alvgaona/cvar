@@ -1,0 +1,41 @@
+---
+import Layout from './Layout.astro';
+const { frontmatter } = Astro.props;
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+---
+
+<Layout
+    meta={{
+        title: `Blog \u2022 ${frontmatter.title}`,
+        ogImage: frontmatter.ogImage,
+        description: frontmatter.description,
+        articleDate: frontmatter.pubDate.toISOString(),
+    }}
+>
+    <main class="mx-auto max-w-6xl pb-12 pt-14 px-24">
+        <div class="mx-auto max-w-5xl px-24">
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator/>
+                    <BreadcrumbPage>
+                        {frontmatter.title}
+                    </BreadcrumbPage>
+                </BreadcrumbList>
+            </Breadcrumb>
+        </div>
+        <article class="mx-auto max-w-5xl px-24 font-antonia-body">
+            <slot />
+        </article>
+    </main>
+</Layout>
